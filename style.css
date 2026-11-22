@@ -1,0 +1,104 @@
+:root {
+  color-scheme: light;
+  --paper: #f5f9fd;
+  --panel: #fff;
+  --ink: #162c43;
+  --muted: #425a71;
+  --blue: #245a85;
+  --button-text: #fff;
+  --line: #cad9e6;
+  --frost: #daeafa;
+  --glow: #fff;
+  --snow: #e6f0fa;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #111c2a;
+  --panel: #172738;
+  --ink: #edf5fd;
+  --muted: #b9cada;
+  --blue: #a9d6fc;
+  --button-text: #122337;
+  --line: #43566b;
+  --frost: #253c54;
+  --glow: #1c2f43;
+  --snow: #304d66;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+  line-height: 1.65;
+}
+a { color: var(--blue); text-underline-offset: .24em; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 5px; }
+.wrap { width: min(100% - 2.5rem, 69rem); margin-inline: auto; }
+.skip { position: absolute; z-index: 2; top: .5rem; left: .5rem; padding: .5rem 1rem; background: var(--panel); }
+.skip:not(:focus) { clip-path: inset(50%); }
+.site-header { background: var(--paper); border-bottom: 1px solid var(--line); }
+.header-inner, .footer { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.header-inner { min-height: 4.5rem; }
+.wordmark { color: var(--ink); font-size: 1.2rem; font-weight: 800; text-decoration: none; }
+.theme:not([hidden]) { display: inline-flex; align-items: center; gap: .6rem; }
+.theme { min-height: 44px; border: 0; padding: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; }
+.track { width: 2.65rem; height: 1.45rem; border: 1px solid var(--blue); border-radius: 1rem; position: relative; }
+.track::before { content: ""; position: absolute; inset: .18rem auto .18rem .18rem; aspect-ratio: 1; border-radius: 50%; background: var(--blue); }
+[aria-checked="true"] .track::before { transform: translateX(1.17rem); }
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 82% 22%, var(--glow), transparent 52%),
+    radial-gradient(circle at 84% 33%, var(--glow) 1px, transparent 2px) 0 0 / 41px 47px,
+    linear-gradient(140deg, var(--paper), var(--frost));
+  border-bottom: 1px solid var(--line);
+}
+.hero-inner { padding-block: clamp(4rem, 9vw, 7.5rem) clamp(6rem, 10vw, 8rem); position: relative; z-index: 1; }
+.hero-label { color: var(--blue); font-weight: 700; margin: 0 0 1.25rem; }
+h1, h2, h3 { margin: 0; line-height: 1.22; word-break: keep-all; overflow-wrap: anywhere; }
+h1 { font-size: clamp(2rem, 7vw, 5rem); letter-spacing: -.075em; }
+.intro { max-width: 33rem; margin: 1.5rem 0; color: var(--muted); word-break: keep-all; }
+.cta { display: inline-flex; align-items: center; gap: 1rem; min-height: 48px; padding: .6rem 1.1rem; border-radius: .45rem; background: var(--blue); color: var(--button-text); font-weight: 700; text-decoration: none; }
+.cta:hover { text-decoration: underline; }
+.methods { padding-block: clamp(3.25rem, 7vw, 5.5rem); }
+h2 { font-size: clamp(1.7rem, 4vw, 2.65rem); letter-spacing: -.05em; }
+.cards { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 0; margin: 1.5rem 0 0; }
+.cards li { display: flex; flex-direction: column; padding: clamp(1.2rem, 3vw, 1.85rem); border: 1px solid var(--line); border-top: 3px solid var(--blue); border-radius: .55rem; background: var(--panel); }
+.cards h3 { font-size: 1.2rem; }
+.cards p { color: var(--muted); word-break: keep-all; overflow-wrap: anywhere; }
+.cards .example { margin: auto 0 0; border-top: 1px solid var(--line); padding-top: .9rem; }
+.example strong { display: block; margin-bottom: .2rem; color: var(--blue); font-size: .85rem; }
+.footer { border-top: 1px solid var(--line); min-height: 5rem; }
+.footer a { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; }
+
+.snowline { position: absolute; inset: auto 0 0; height: 1.4rem; background: var(--snow); border-radius: 50% 90% 0 0; pointer-events: none; }
+.cat-route { position: absolute; bottom: .55rem; left: 5%; right: 5%; height: 44px; }
+.cat { position: absolute; width: 68px; height: 44px; left: 0; bottom: 0; animation: roam 28s linear infinite; }
+.cat span { position: absolute; display: block; }
+.cat .body { left: 15px; bottom: 7px; width: 40px; height: 23px; border-radius: 56% 50% 36% 43%; background: #222632; }
+.cat .tail { left: 1px; bottom: 13px; width: 22px; height: 17px; border: 5px solid #222632; border-right: 0; border-top: 0; border-radius: 0 0 0 14px; transform-origin: right bottom; animation: wag 1.2s ease-in-out infinite alternate; }
+.cat .head { left: 39px; bottom: 14px; width: 27px; height: 22px; border-radius: 48% 53% 46% 50%; background: #1b1e28; }
+.cat .ear { top: -6px; width: 10px; height: 12px; border-radius: 70% 10% 50% 10%; background: #1b1e28; }
+.cat .near { left: 2px; transform: rotate(-38deg); }
+.cat .far { right: 1px; transform: rotate(20deg); }
+.cat .eyes { top: 9px; left: 10px; width: 3px; height: 4px; border-radius: 50%; background: #e7d487; box-shadow: 9px 0 #e7d487; }
+.cat .nose { top: 14px; right: 6px; width: 4px; height: 2px; border-radius: 50%; background: #b08899; }
+.cat .scarf { left: 38px; bottom: 9px; width: 13px; height: 6px; border-radius: 25%; background: #87b7dd; transform: rotate(26deg); }
+.cat .paw { bottom: 1px; width: 8px; height: 13px; border-radius: 0 0 50% 50%; background: #222632; transform-origin: top center; animation: step .48s ease-in-out infinite alternate; }
+.cat .back { left: 21px; }
+.cat .front { left: 46px; animation-direction: alternate-reverse; }
+@keyframes roam {
+  0% { left: 0; transform: scaleX(1); }
+  48% { left: calc(100% - 68px); transform: scaleX(1); }
+  50% { left: calc(100% - 68px); transform: scaleX(-1); }
+  98% { left: 0; transform: scaleX(-1); }
+  100% { left: 0; transform: scaleX(1); }
+}
+@keyframes wag { to { transform: rotate(18deg); } }
+@keyframes step { from { transform: rotate(-22deg); } to { transform: rotate(22deg); } }
+@media (max-width: 43rem) { .cards { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .cat, .cat .paw, .cat .tail { animation: none; } .cat { left: calc(100% - 68px); } }
