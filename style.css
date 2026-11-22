@@ -26,7 +26,7 @@
   --cat: #0b0d13; --cat-head: #07080c; --eye: #f2dc7a; --nose: #d79aa9; --wood: #a0683a;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-text); font-size: 15px; line-height: 1.85; letter-spacing: .01em; -webkit-font-smoothing: none; }
 :root { --font-text: var(--font-pixel); }
 a { color: var(--pine); text-underline-offset: .24em; }
@@ -57,6 +57,8 @@ svg.sprite { display: block; shape-rendering: crispEdges; image-rendering: pixel
 .hero-inner { position: relative; z-index: 1; padding-block: clamp(3rem, 7vw, 5.5rem) clamp(7rem, 11vw, 8.5rem); display: grid; gap: 1.2rem; justify-items: start; }
 .hello { margin: 0; font-family: var(--font-pixel); color: var(--berry); font-size: 1rem; letter-spacing: .04em; }
 h1 { font-family: var(--font-pixel); font-size: clamp(1.9rem, 5.4vw, 3.4rem); font-weight: 700; letter-spacing: 0; line-height: 1.35; text-shadow: 4px 4px 0 var(--snow); }
+.tagline { margin: -.2rem 0 0; max-width: 36rem; font-size: 1.1rem; line-height: 1.8; color: var(--ink); }
+.tagline strong { font-family: var(--font-pixel); font-weight: 700; color: var(--berry); padding: 0 .15em; background: linear-gradient(transparent 58%, var(--snow) 58%); }
 .intro { margin: 0; display: grid; gap: .15rem; color: var(--muted); font-size: 1.05rem; }
 .intro .skills-line { font-family: var(--font-pixel); color: var(--pine); font-size: 1rem; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; margin-top: .4rem; }
@@ -119,7 +121,7 @@ summary:hover { text-decoration: underline; }
 .habits > li { padding: .55rem 1.1rem; }
 .habits details { border-top: 0; }
 .habits summary { color: var(--ink); font-size: 1rem; font-weight: 700; gap: .9rem; }
-.habits summary::before { content: none; }
+.habits summary::before, .habits details[open] summary::before { content: none; }
 .copy-btn { margin-left: auto; flex: none; min-height: 36px; min-width: 64px; padding: 0 .6rem; border: 2px solid var(--line); background: var(--panel); color: var(--ink); font-family: var(--font-pixel); font-size: .8rem; font-weight: 700; cursor: pointer; box-shadow: 2px 2px 0 var(--shade); }
 .copy-btn:hover { background: var(--chip); }
 .copy-btn:active { transform: translate(2px, 2px); box-shadow: none; }
@@ -154,11 +156,30 @@ body { -webkit-user-select: none; user-select: none; }
 .to-top { position: fixed; z-index: 20; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 4px); bottom: calc(env(safe-area-inset-bottom, 0px) + 20px); display: grid; place-items: center; gap: 0; width: 56px; height: 56px; border: 3px solid var(--line); background: var(--pine); color: var(--button-text); font-family: var(--font-pixel); font-size: .8rem; font-weight: 700; line-height: 1; text-decoration: none; box-shadow: 4px 4px 0 var(--shade); cursor: pointer; transition: transform 120ms steps(2), box-shadow 120ms steps(2); }
 .to-top:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--shade); }
 .to-top svg { margin-bottom: 2px; }
+.to-top.is-hidden { opacity: 0; visibility: hidden; transform: translateY(8px); }
+.to-top { transition: opacity 160ms steps(3), visibility 160ms, transform 120ms steps(2), box-shadow 120ms steps(2); }
 
 @media (max-width: 46rem) {
   .questions, .made > li, .others { grid-template-columns: minmax(0, 1fr); }
   .gifts { display: none; }
   .cat-route { right: calc(clamp(1rem, 8vw, 6rem) + 120px); }
+  .block { padding-block: 3.25rem; }
+  .section-head { margin-bottom: 1.4rem; }
+  .hero-inner { padding-block: 2.5rem 7rem; gap: 1rem; }
+  .cta { width: 100%; justify-content: center; }
+  .questions { gap: 1rem; }
+  .box { box-shadow: 4px 4px 0 var(--shade); }
+  .made > li { padding: 1.1rem 1rem; }
+  .links a { min-height: 44px; }
+  .habits > li { padding: .45rem .75rem; }
+  .habits summary { gap: .55rem; }
+  .copy-btn { min-width: 0; min-height: 40px; padding: 0 .5rem; font-size: .72rem; }
+  .habits summary::after { width: 1.35rem; height: 1.35rem; }
+  .habits .detail-body { padding: .1rem 0 .55rem; }
+  .prompt-line { font-size: .8rem; }
+  .others { gap: 1.25rem; }
+  .footer-inner { padding-bottom: 5rem; }
+  .to-top { width: 46px; height: 46px; font-size: .7rem; right: calc(max(12px, env(safe-area-inset-right, 0px))); bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); box-shadow: 3px 3px 0 var(--shade); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
