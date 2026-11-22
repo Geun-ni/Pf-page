@@ -20,6 +20,43 @@
   sys.addEventListener('change', apply);
   apply();
 
+  /* 배경 음악: 처음엔 꺼짐, 켜고 끈 상태는 기억 */
+  const bgm = document.getElementById('bgm');
+  const bgmBtn = document.getElementById('bgm-toggle');
+  const bgmState = bgmBtn.querySelector('.bgm-state');
+  const bgmKey = 'geun-ni-pf-page-bgm';
+  bgm.volume = 0.4;
+  function showBgm(on) {
+    bgmBtn.setAttribute('aria-pressed', String(on));
+    bgmState.textContent = on ? 'ON' : 'OFF';
+  }
+  function saveBgm(on) { try { localStorage.setItem(bgmKey, on ? 'on' : 'off'); } catch (e) {} }
+  async function playBgm() {
+    try { await bgm.play(); showBgm(true); return true; } catch (e) { return false; }
+  }
+  bgmBtn.addEventListener('click', async () => {
+    if (bgm.paused) { if (await playBgm()) saveBgm(true); }
+    else { bgm.pause(); showBgm(false); saveBgm(false); }
+  });
+  // 음악 파일이 있을 때만 버튼을 보여 줌
+  fetch(bgm.getAttribute('src'), { method: 'HEAD' }).then((r) => {
+    if (!r.ok) return;
+    bgmBtn.hidden = false;
+    document.querySelector('.bgm-credit').hidden = false;
+    let saved = null;
+    try { saved = localStorage.getItem(bgmKey); } catch (e) {}
+    if (saved !== 'on') return;
+    // 지난번에 켜 두었으면 다시 켬. 브라우저가 막으면 첫 클릭·탭 때 이어서 재생
+    playBgm().then((ok) => {
+      if (ok) return;
+      const resume = (e) => {
+        if (e.target.closest('#bgm-toggle')) return;
+        if (bgm.paused) playBgm();
+      };
+      document.addEventListener('pointerdown', resume, { once: true });
+    });
+  }).catch(() => {});
+
   /* 이메일: 소스에 주소를 그대로 두지 않고 화면에서 조립 */
   const mail = document.getElementById('mail');
   mail.textContent = mail.dataset.u + '@' + mail.dataset.d;

@@ -45,6 +45,15 @@ svg.sprite { display: block; shape-rendering: crispEdges; image-rendering: pixel
 .wordmark { color: var(--ink); font-family: var(--font-pixel); font-size: 1.5rem; font-weight: 700; text-decoration: none; letter-spacing: .02em; }
 .wordmark span { color: var(--berry); }
 .theme { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; border: 0; padding: 0; background: none; color: var(--ink); font: inherit; font-size: .9rem; cursor: pointer; }
+.header-tools { display: flex; align-items: center; gap: .9rem; }
+.bgm { display: inline-flex; align-items: center; gap: .4rem; min-height: 36px; padding: 0 .6rem; border: 2px solid var(--line); background: var(--panel); color: var(--ink); font-family: var(--font-pixel); font-size: .8rem; font-weight: 700; cursor: pointer; box-shadow: 2px 2px 0 var(--shade); touch-action: manipulation; }
+.bgm[hidden] { display: none; }
+.bgm:active { transform: translate(2px, 2px); box-shadow: none; }
+.bgm-state { min-width: 2.2em; color: var(--muted); }
+.bgm[aria-pressed="true"] { background: var(--pine); color: var(--button-text); }
+.bgm[aria-pressed="true"] .bgm-state { color: inherit; }
+.bgm[aria-pressed="true"] svg { animation: bob .6s steps(2) infinite; }
+@keyframes bob { 50% { transform: translateY(-2px); } }
 .track { width: 2.75rem; height: 1.5rem; border: 2px solid var(--line); position: relative; background: var(--panel); }
 .track::before { content: ""; position: absolute; top: 2px; left: 2px; width: calc(1.5rem - 8px); height: calc(1.5rem - 8px); background: var(--pine); transition: transform 160ms steps(3); }
 [aria-checked="true"] .track::before { transform: translateX(1.25rem); background: var(--gold); }
@@ -199,6 +208,8 @@ body { -webkit-user-select: none; user-select: none; }
   .habits .detail-body { padding: .1rem 0 .55rem; }
   .prompt-line { font-size: .8rem; }
   .others { gap: 1.25rem; }
+  .header-tools { gap: .6rem; }
+  .theme-label { display: none; }
   .footer-inner { padding-bottom: 5rem; }
   .to-top { width: 46px; height: 46px; font-size: .7rem; right: calc(max(12px, env(safe-area-inset-right, 0px))); bottom: calc(env(safe-area-inset-bottom, 0px) + 14px); box-shadow: 3px 3px 0 var(--shade); }
 }
@@ -208,4 +219,5 @@ body { -webkit-user-select: none; user-select: none; }
   .cat.jumping .cat-jump { animation: none; }
   .gift .lid { transition: none; }
   .cta, .to-top, .track::before { transition: none; }
+  .bgm[aria-pressed="true"] svg { animation: none; }
 }
