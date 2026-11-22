@@ -9,8 +9,8 @@
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap">
-  <link rel="stylesheet" href="style.css?v=8">
-  <script src="theme.js?v=5" defer></script>
+  <link rel="stylesheet" href="style.css?v=9">
+  <script src="theme.js?v=6" defer></script>
 </head>
 <body>
 <a class="skip" href="#top">본문으로 건너뛰기</a>
@@ -39,11 +39,16 @@
         <a class="quiet-link" href="https://github.com/Geun-ni">GitHub ↗</a>
       </div>
     </div>
-    <div class="scene" aria-hidden="true">
-      <div class="ground"></div>
-      <div class="cat-route"><div class="cat" id="cat"></div></div>
-      <div class="gifts" id="gifts"></div>
-      <div class="tree" id="tree"></div>
+    <div class="scene">
+      <div class="ground" aria-hidden="true"></div>
+      <div class="cat-route">
+        <button class="cat" id="cat" type="button" aria-label="고양이 점프시키기">
+          <span class="cat-hint" id="cat-hint" aria-hidden="true">JUMP!</span>
+          <span class="cat-jump"><span class="cat-flip" id="cat-flip"><span class="cat-alert" aria-hidden="true">!</span></span></span>
+        </button>
+      </div>
+      <div class="gifts" id="gifts"><span class="gift-msg" id="gift-msg" aria-hidden="true"></span></div>
+      <div class="tree" id="tree" aria-hidden="true"></div>
     </div>
   </section>
 
