@@ -52,7 +52,7 @@ svg.sprite { display: block; shape-rendering: crispEdges; image-rendering: pixel
 .lights canvas { position: absolute; inset: -2px 0 auto; width: 100%; height: 16px; }
 
 /* 히어로 */
-.hero { position: relative; overflow: hidden; background: linear-gradient(180deg, var(--paper), var(--frost)); border-bottom: 3px solid var(--line); }
+.hero { position: relative; overflow: hidden; contain: paint; background: linear-gradient(180deg, var(--paper), var(--frost)); border-bottom: 3px solid var(--line); }
 .hero canvas.snowfall { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .hero-inner { position: relative; z-index: 1; padding-block: clamp(3rem, 7vw, 5.5rem) clamp(7rem, 11vw, 8.5rem); display: grid; gap: 1.2rem; justify-items: start; }
 .hello { margin: 0; font-family: var(--font-pixel); color: var(--berry); font-size: 1rem; letter-spacing: .04em; }

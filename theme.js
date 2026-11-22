@@ -144,43 +144,54 @@
   gifts.append(sprite(gift, { r: v('berry'), y: v('gold') }, 5), sprite(gift2, { g: v('pine'), w: '#f4f4f0' }, 4));
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!reduce) setInterval(() => cat.classList.toggle('step'), 240);
 
-  /* 전구 줄 */
+  /* 화면에 보일 때만 움직임 (모바일 스크롤 중 다시 그리기 부담 줄이기) */
+  const hero = document.querySelector('.hero');
+  const lightsBar = document.querySelector('.lights');
+  let heroOn = true, lightsOn = true;
+  const active = () => !reduce && !document.hidden;
+
+  setInterval(() => { if (active() && heroOn) cat.classList.toggle('step'); }, 240);
+
+  /* 전구 줄: 크기는 폭이 바뀔 때만 다시 잡음 */
   const lc = document.getElementById('lights');
-  function drawLights(t) {
+  const lctx = lc.getContext('2d');
+  let lw = 0, lh = 0, lt = 0;
+  function sizeLights() {
     const dpr = window.devicePixelRatio || 1;
     const w = lc.clientWidth, h = lc.clientHeight;
+    if (w === lw && h === lh) return;
+    lw = w; lh = h;
     lc.width = Math.round(w * dpr); lc.height = Math.round(h * dpr);
-    const ctx = lc.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, w, h);
+    lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function drawLights() {
+    lctx.clearRect(0, 0, lw, lh);
     const cs = getComputedStyle(document.documentElement);
     const cols = [cs.getPropertyValue('--berry'), cs.getPropertyValue('--pine'), cs.getPropertyValue('--gold'), '#7fc6ff'];
-    const gap = 28;
-    for (let i = 0, x = 10; x < w; i++, x += gap) {
-      const on = reduce || ((i + t) % 2 === 0);
-      ctx.globalAlpha = on ? 1 : .35;
-      ctx.fillStyle = cs.getPropertyValue('--line');
-      ctx.fillRect(x + 2, 2, 4, 3);
-      ctx.fillStyle = cols[i % cols.length].trim();
-      ctx.fillRect(x, 5, 8, 8);
+    const line = cs.getPropertyValue('--line');
+    for (let i = 0, x = 10; x < lw; i++, x += 28) {
+      lctx.globalAlpha = (reduce || (i + lt) % 2 === 0) ? 1 : .35;
+      lctx.fillStyle = line;
+      lctx.fillRect(x + 2, 2, 4, 3);
+      lctx.fillStyle = cols[i % cols.length].trim();
+      lctx.fillRect(x, 5, 8, 8);
     }
-    ctx.globalAlpha = 1;
+    lctx.globalAlpha = 1;
   }
-  let lt = 0;
-  drawLights(lt);
-  if (!reduce) setInterval(() => drawLights(++lt), 700);
-  addEventListener('resize', () => drawLights(lt));
-  sys.addEventListener('change', () => drawLights(lt));
-  sw.addEventListener('click', () => drawLights(lt));
+  sizeLights(); drawLights();
+  setInterval(() => { if (active() && lightsOn) { lt++; drawLights(); } }, 700);
+  sys.addEventListener('change', drawLights);
+  sw.addEventListener('click', drawLights);
 
-  /* 픽셀 눈 */
+  /* 픽셀 눈: 크기는 폭이 바뀔 때만 다시 잡음 (모바일 주소창이 접힐 때는 무시) */
   const sc = document.getElementById('snowfall');
   const sctx = sc.getContext('2d');
-  let flakes = [];
-  function resizeSnow() {
+  let flakes = [], sw0 = 0, running = false;
+  function sizeSnow() {
     const r = sc.getBoundingClientRect();
+    if (Math.round(r.width) === sw0) return;
+    sw0 = Math.round(r.width);
     sc.width = Math.max(1, Math.round(r.width / 3));
     sc.height = Math.max(1, Math.round(r.height / 3));
     sc.style.imageRendering = 'pixelated';
@@ -194,6 +205,7 @@
     for (const f of flakes) sctx.fillRect(Math.round(f.x), Math.round(f.y), f.s, f.s);
   }
   function tick() {
+    if (!active() || !heroOn) { running = false; return; }
     for (const f of flakes) {
       f.y += f.v; f.d += .01; f.x += Math.sin(f.d) * .08;
       if (f.y > sc.height) { f.y = -2; f.x = Math.random() * sc.width; }
@@ -201,7 +213,22 @@
     drawSnow();
     requestAnimationFrame(tick);
   }
-  resizeSnow();
-  addEventListener('resize', resizeSnow);
-  if (reduce) drawSnow(); else requestAnimationFrame(tick);
+  function startSnow() {
+    if (running || !active() || !heroOn) return;
+    running = true;
+    requestAnimationFrame(tick);
+  }
+  sizeSnow(); drawSnow(); startSnow();
+
+  addEventListener('resize', () => { sizeLights(); drawLights(); sizeSnow(); drawSnow(); });
+  document.addEventListener('visibilitychange', startSnow);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.target === hero) { heroOn = e.isIntersecting; startSnow(); }
+        else lightsOn = e.isIntersecting;
+      }
+    }).observe(hero);
+    new IntersectionObserver(([e]) => { lightsOn = e.isIntersecting; }).observe(lightsBar);
+  }
 })();
