@@ -33,6 +33,12 @@
   });
   document.addEventListener('contextmenu', (e) => { if (!e.target.closest('.prompt-line, #mail')) e.preventDefault(); });
 
+  /* 맨 위로 버튼: 첫 화면에서는 숨기고 스크롤하면 표시 */
+  const toTop = document.querySelector('.to-top');
+  const syncTop = () => toTop.classList.toggle('is-hidden', scrollY < 400);
+  addEventListener('scroll', syncTop, { passive: true });
+  syncTop();
+
   /* Main Prompt 복사 버튼 */
   const live = document.getElementById('copy-live');
   for (const li of document.querySelectorAll('.habits > li')) {
