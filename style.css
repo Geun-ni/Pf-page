@@ -58,6 +58,7 @@ svg.sprite { display: block; shape-rendering: crispEdges; image-rendering: pixel
 .hello { margin: 0; font-family: var(--font-pixel); color: var(--berry); font-size: 1rem; letter-spacing: .04em; }
 h1 { font-family: var(--font-pixel); font-size: clamp(1.9rem, 5.4vw, 3.4rem); font-weight: 700; letter-spacing: 0; line-height: 1.35; text-shadow: 4px 4px 0 var(--snow); }
 .tagline { margin: -.2rem 0 0; max-width: 36rem; font-size: 1.1rem; line-height: 1.8; color: var(--ink); }
+.detail-body li strong { color: var(--ink); }
 .tagline strong { font-family: var(--font-pixel); font-weight: 700; color: var(--berry); padding: 0 .15em; background: linear-gradient(transparent 58%, var(--snow) 58%); }
 .intro { margin: 0; display: grid; gap: .15rem; color: var(--muted); font-size: 1.05rem; }
 .intro .skills-line { font-family: var(--font-pixel); color: var(--pine); font-size: 1rem; }
