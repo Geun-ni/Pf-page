@@ -112,7 +112,7 @@
   const cat = document.getElementById('cat');
   const fa = sprite(catA, catColors, 4); fa.classList.add('frame-a');
   const fb = sprite(catB, catColors, 4); fb.classList.add('frame-b');
-  cat.append(fa, fb);
+  document.getElementById('cat-flip').append(fa, fb);
 
   const tree = [
     '.......y.......',
@@ -141,9 +141,83 @@
   const gift = ['.y...y.', '..y.y..', 'rrryrrr', 'rrryrrr', 'yyyyyyy', 'rrryrrr', 'rrryrrr'];
   const gift2 = ['..w.w..', '...w...', 'gggwggg', 'gggwggg', 'wwwwwww', 'gggwggg'];
   const gifts = document.getElementById('gifts');
-  gifts.append(sprite(gift, { r: v('berry'), y: v('gold') }, 5), sprite(gift2, { g: v('pine'), w: '#f4f4f0' }, 4));
+  function giftButton(rows, colors, scale, lidRows, label, message) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'gift';
+    b.setAttribute('aria-label', label);
+    b.dataset.message = message;
+    const lid = sprite(rows.slice(0, lidRows), colors, scale); lid.classList.add('lid');
+    b.append(lid, sprite(rows.slice(lidRows), colors, scale));
+    return b;
+  }
+  gifts.append(
+    giftButton(gift, { r: v('berry'), y: v('gold') }, 5, 4, '빨간 선물 상자 열기', 'Merry Christmas!'),
+    giftButton(gift2, { g: v('pine'), w: '#f4f4f0' }, 4, 4, '초록 선물 상자 열기', 'Thanks for visiting!'));
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* 미니 게임: 고양이 점프, JUMP! 힌트, 선물 상자 */
+  const hint = document.getElementById('cat-hint');
+  const giftMsg = document.getElementById('gift-msg');
+  const say = (text) => { const l = document.getElementById('copy-live'); if (l) l.textContent = text; };
+  let msgTimer = 0;
+
+  function openGift(btn) {
+    for (const g of gifts.querySelectorAll('.gift')) g.classList.toggle('open', g === btn);
+    giftMsg.textContent = btn.dataset.message;
+    giftMsg.classList.add('show');
+    say(btn.dataset.message);
+    clearTimeout(msgTimer);
+    msgTimer = setTimeout(() => {
+      giftMsg.classList.remove('show');
+      btn.classList.remove('open');
+    }, 2600);
+  }
+  for (const g of gifts.querySelectorAll('.gift')) g.addEventListener('click', () => openGift(g));
+
+  function nearestGift() {
+    const c = cat.getBoundingClientRect();
+    let best = null, gap = 48;
+    for (const g of gifts.querySelectorAll('.gift')) {
+      const r = g.getBoundingClientRect();
+      if (!r.width) continue;
+      const d = Math.max(r.left - c.right, c.left - r.right, 0);
+      if (d < gap) { gap = d; best = g; }
+    }
+    return best;
+  }
+
+  function dust() {
+    for (let i = 0; i < 5; i++) {
+      const d = document.createElement('span');
+      d.className = 'dust';
+      d.style.left = (22 + i * 8) + 'px';
+      d.style.bottom = '0px';
+      d.style.setProperty('--dx', ((i - 2) * 6) + 'px');
+      d.addEventListener('animationend', () => d.remove());
+      cat.appendChild(d);
+    }
+  }
+
+  let alertTimer = 0;
+  cat.addEventListener('click', () => {
+    hint.hidden = true;
+    cat.classList.add('alert');
+    clearTimeout(alertTimer);
+    alertTimer = setTimeout(() => cat.classList.remove('alert'), 900);
+    if (reduce) { const g = nearestGift(); if (g) openGift(g); return; }
+    cat.classList.remove('jumping');
+    void cat.offsetWidth;
+    cat.classList.add('jumping');
+    dust();
+  });
+  cat.addEventListener('animationend', (e) => {
+    if (e.animationName !== 'jump') return;
+    cat.classList.remove('jumping');
+    const g = nearestGift();
+    if (g) openGift(g);
+  });
 
   /* 화면에 보일 때만 움직임 (모바일 스크롤 중 다시 그리기 부담 줄이기) */
   const hero = document.querySelector('.hero');
