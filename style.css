@@ -1,5 +1,6 @@
 :root {
   color-scheme: light;
+  scroll-behavior: smooth;
   --paper: #f5f9fd;
   --panel: #fff;
   --ink: #162c43;
@@ -10,6 +11,8 @@
   --frost: #daeafa;
   --glow: #fff;
   --snow: #e6f0fa;
+  --prompt: #edf4fb;
+  --shadow: #19385120;
 }
 
 :root[data-theme="dark"] {
@@ -24,6 +27,8 @@
   --frost: #253c54;
   --glow: #1c2f43;
   --snow: #304d66;
+  --prompt: #213448;
+  --shadow: #050b1470;
 }
 
 * { box-sizing: border-box; }
@@ -31,7 +36,7 @@ body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
-  font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+  font-family: "Pretendard Variable", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
   line-height: 1.65;
 }
 a { color: var(--blue); text-underline-offset: .24em; }
@@ -45,8 +50,9 @@ a { color: var(--blue); text-underline-offset: .24em; }
 .wordmark { color: var(--ink); font-size: 1.2rem; font-weight: 800; text-decoration: none; }
 .theme:not([hidden]) { display: inline-flex; align-items: center; gap: .6rem; }
 .theme { min-height: 44px; border: 0; padding: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; }
-.track { width: 2.65rem; height: 1.45rem; border: 1px solid var(--blue); border-radius: 1rem; position: relative; }
-.track::before { content: ""; position: absolute; inset: .18rem auto .18rem .18rem; aspect-ratio: 1; border-radius: 50%; background: var(--blue); }
+.track { width: 2.65rem; height: 1.45rem; border: 1px solid var(--blue); border-radius: 1rem; position: relative; transition: background-color 200ms ease, border-color 200ms ease; }
+.track::before { content: ""; position: absolute; inset: .18rem auto .18rem .18rem; aspect-ratio: 1; border-radius: 50%; background: var(--blue); transition: transform 200ms ease, background-color 200ms ease; }
+[aria-checked="true"] .track { background: var(--prompt); }
 [aria-checked="true"] .track::before { transform: translateX(1.17rem); }
 
 .hero {
@@ -66,12 +72,38 @@ h1 { font-size: clamp(2rem, 7vw, 5rem); letter-spacing: -.075em; }
 .cta:hover { text-decoration: underline; }
 .methods { padding-block: clamp(3.25rem, 7vw, 5.5rem); }
 h2 { font-size: clamp(1.7rem, 4vw, 2.65rem); letter-spacing: -.05em; }
-.cards { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 0; margin: 1.5rem 0 0; }
-.cards li { display: flex; flex-direction: column; padding: clamp(1.2rem, 3vw, 1.85rem); border: 1px solid var(--line); border-top: 3px solid var(--blue); border-radius: .55rem; background: var(--panel); }
+.cards { counter-reset: method; list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: 0; margin: 1.5rem 0 0; }
+.cards li { counter-increment: method; display: flex; flex-direction: column; padding: clamp(1.2rem, 3vw, 1.85rem); border: 1px solid var(--line); border-top: 3px solid var(--blue); border-radius: .55rem; background: var(--panel); transition: transform 180ms ease, box-shadow 180ms ease; }
+.cards li::before {
+  content: counter(method, decimal-leading-zero);
+  content: counter(method, decimal-leading-zero) / "";
+  margin-bottom: .65rem;
+  color: var(--blue);
+  font-size: .85rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+@media (hover: hover) {
+  .cards li:hover { transform: translateY(-4px); box-shadow: 0 10px 24px var(--shadow); }
+}
 .cards h3 { font-size: 1.2rem; }
 .cards p { color: var(--muted); word-break: keep-all; overflow-wrap: anywhere; }
-.cards .example { margin: auto 0 0; border-top: 1px solid var(--line); padding-top: .9rem; }
-.example strong { display: block; margin-bottom: .2rem; color: var(--blue); font-size: .85rem; }
+.cards .example { margin-top: auto; border: 1px solid var(--line); border-radius: .4rem; padding: .55rem .75rem .75rem; background: var(--prompt); }
+.example-header { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+.example strong { color: var(--blue); font-size: .85rem; }
+.example p { margin: .3rem 0 0; font-size: .95rem; }
+.copy { min-width: 44px; min-height: 44px; padding: 0 .35rem; border: 0; background: none; color: var(--blue); font: inherit; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.copy:hover { text-decoration: underline; }
+.example .copy-status { margin: 0; color: var(--blue); font-size: .8rem; }
+.example .copy-status:not(:empty) { margin-top: .4rem; }
+.archive { padding-bottom: clamp(3.25rem, 7vw, 5.5rem); }
+.archive h2 span { margin-inline-start: .35rem; color: var(--muted); font-size: .95rem; letter-spacing: normal; }
+.archive-empty { margin: 1.25rem 0 0; padding: 1rem 0; border-block: 1px solid var(--line); color: var(--muted); }
+.archive-list { margin: 1.25rem 0 0; padding: 0; border-top: 1px solid var(--line); list-style: none; }
+.archive-list li { display: grid; grid-template-columns: minmax(10rem, 1fr) 3fr; align-items: baseline; gap: .5rem 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.archive-list p { margin: 0; overflow-wrap: anywhere; }
+.record-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem .7rem; color: var(--muted); font-size: .9rem; }
+.record-tag { border: 1px solid var(--line); border-radius: 1rem; padding: .1rem .55rem; background: var(--prompt); color: var(--blue); overflow-wrap: anywhere; }
 .footer { border-top: 1px solid var(--line); min-height: 5rem; }
 .footer a { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; }
 
@@ -100,5 +132,11 @@ h2 { font-size: clamp(1.7rem, 4vw, 2.65rem); letter-spacing: -.05em; }
 }
 @keyframes wag { to { transform: rotate(18deg); } }
 @keyframes step { from { transform: rotate(-22deg); } to { transform: rotate(22deg); } }
-@media (max-width: 43rem) { .cards { grid-template-columns: 1fr; } }
-@media (prefers-reduced-motion: reduce) { .cat, .cat .paw, .cat .tail { animation: none; } .cat { left: calc(100% - 68px); } }
+@media (max-width: 43rem) { .cards, .archive-list li { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  :root { scroll-behavior: auto; }
+  .track, .track::before, .cards li { transition: none; }
+  .cards li:hover { transform: none; }
+  .cat, .cat .paw, .cat .tail { animation: none; }
+  .cat { left: calc(100% - 68px); }
+}

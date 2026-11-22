@@ -30,3 +30,21 @@ themeSwitch.addEventListener('click', () => {
 systemTheme.addEventListener('change', applyTheme);
 applyTheme();
 themeSwitch.hidden = false;
+
+for (const example of document.querySelectorAll('.example')) {
+  const button = example.querySelector('.copy');
+  const prompt = example.querySelector('.prompt');
+  const status = example.querySelector('.copy-status');
+  if (!navigator.clipboard?.writeText) continue;
+
+  button.hidden = false;
+  button.addEventListener('click', async () => {
+    status.textContent = '';
+    try {
+      await navigator.clipboard.writeText(prompt.textContent.trim());
+      status.textContent = '복사했습니다.';
+    } catch {
+      status.textContent = '복사할 수 없습니다. 예시 문구를 직접 선택해 복사해 주세요.';
+    }
+  });
+}
